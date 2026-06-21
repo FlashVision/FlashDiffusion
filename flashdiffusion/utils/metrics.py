@@ -1,6 +1,6 @@
 """Quality metrics for generated images — FID, CLIP Score, Inception Score."""
 
-from typing import List, Optional
+from typing import List
 
 import numpy as np
 from PIL import Image

@@ -1,8 +1,7 @@
 """Unit tests for FlashDiffusion models."""
 
 import torch
-import pytest
-from flashdiffusion.models.lora import LoRALinear, apply_lora, merge_lora_weights
+from flashdiffusion.models.lora import LoRALinear, merge_lora_weights
 
 
 def test_lora_linear_forward():

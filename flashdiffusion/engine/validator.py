@@ -4,8 +4,6 @@ import logging
 from typing import Dict, List, Optional
 
 import torch
-import numpy as np
-from PIL import Image
 
 logger = logging.getLogger(__name__)
 

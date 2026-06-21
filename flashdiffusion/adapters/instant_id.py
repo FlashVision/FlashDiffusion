@@ -7,11 +7,10 @@ Reference: https://arxiv.org/abs/2401.07519
 """
 
 import logging
-from typing import Dict, List, Optional, Tuple, Union
+from typing import List, Optional, Tuple, Union
 
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 from PIL import Image
 import numpy as np
 
@@ -208,7 +207,7 @@ class InstantIDAdapter:
 
         device = self.pipe.device if hasattr(self.pipe, "device") else torch.device("cpu")
         face_tensor = torch.tensor(face_embedding, dtype=torch.float32, device=device).unsqueeze(0)
-        identity_tokens = self.identity_net(face_tensor)
+        self.identity_net(face_tensor)
 
         generator = None
         if seed is not None:

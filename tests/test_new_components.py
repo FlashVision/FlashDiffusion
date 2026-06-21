@@ -1,11 +1,10 @@
 """Tests for new FlashDiffusion P0 components — SDXL, SD3, adapters, video, upscaling."""
 
-import pytest
 import torch
 
 from flashdiffusion.models.sd3 import MMDiTBlock, FlowMatchingScheduler
 from flashdiffusion.models.sdxl.sdxl_unet import SDXLUNetWrapper
-from flashdiffusion.adapters.ip_adapter import DecoupledCrossAttention, IPAdapterImageEncoder
+from flashdiffusion.adapters.ip_adapter import DecoupledCrossAttention
 from flashdiffusion.adapters.instant_id import IdentityNet
 from flashdiffusion.video.animatediff import TemporalAttention, AnimateDiffMotionModule
 from flashdiffusion.upscaling.esrgan import DenseBlock, RRDB, RRDBNet

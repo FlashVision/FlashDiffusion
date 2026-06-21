@@ -6,7 +6,6 @@ from flashdiffusion.schedulers import (
     DDPMScheduler, DDIMScheduler, DPMPlusPlusScheduler,
     EulerScheduler, EulerAncestralScheduler, LCMScheduler,
 )
-from flashdiffusion.schedulers.base import BaseScheduler
 
 
 @pytest.mark.parametrize("SchedulerCls", [

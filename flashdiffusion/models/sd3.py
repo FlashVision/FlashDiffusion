@@ -5,12 +5,10 @@ used in Stable Diffusion 3 and FLUX models with flow matching.
 """
 
 import logging
-import math
-from typing import Dict, List, Optional, Tuple, Union
+from typing import List, Optional, Tuple, Union
 
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 from PIL import Image
 
 logger = logging.getLogger(__name__)

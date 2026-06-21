@@ -7,7 +7,7 @@ Reference: https://arxiv.org/abs/2311.15127
 """
 
 import logging
-from typing import List, Optional, Tuple, Union
+from typing import List, Optional, Union
 
 import torch
 import torch.nn as nn

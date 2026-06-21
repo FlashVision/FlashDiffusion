@@ -1,21 +1,17 @@
 """FlashDiffusion Trainer — LoRA, DreamBooth, and Textual Inversion training."""
 
 import os
-import copy
-import math
 import logging
 from typing import Any, Dict, List, Optional
 
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from tqdm import tqdm
 
-from flashdiffusion.cfg import get_config
-from flashdiffusion.models.lora import apply_lora, get_lora_state_dict, merge_lora_weights
+from flashdiffusion.models.lora import apply_lora, get_lora_state_dict
 from flashdiffusion.data import create_dataloader
 from flashdiffusion.utils import setup_logger, AverageMeter
-from flashdiffusion.utils.checkpoint import save_checkpoint, load_checkpoint
+from flashdiffusion.utils.checkpoint import save_checkpoint
 from flashdiffusion.engine.callbacks import CallbackList, Callback
 
 logger = logging.getLogger(__name__)
@@ -346,7 +342,7 @@ class Trainer:
         vae = pipe.vae.to(self.device)
         noise_scheduler = DDPMScheduler.from_pretrained(self.model_id, subfolder="scheduler")
 
-        num_added = tokenizer.add_tokens(self.placeholder_token)
+        tokenizer.add_tokens(self.placeholder_token)
         text_encoder.resize_token_embeddings(len(tokenizer))
 
         placeholder_token_id = tokenizer.convert_tokens_to_ids(self.placeholder_token)

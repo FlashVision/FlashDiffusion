@@ -1,10 +1,9 @@
 """ControlNet conditioning — wrapper for HuggingFace diffusers ControlNetModel."""
 
 import logging
-from typing import Dict, List, Optional, Tuple, Union
+from typing import Dict, List, Optional, Union
 
 import torch
-import torch.nn as nn
 from PIL import Image
 
 logger = logging.getLogger(__name__)

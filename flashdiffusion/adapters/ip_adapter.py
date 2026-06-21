@@ -7,11 +7,10 @@ Reference: https://arxiv.org/abs/2308.06721
 """
 
 import logging
-from typing import Dict, List, Optional, Tuple, Union
+from typing import List, Optional, Union
 
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 from PIL import Image
 
 logger = logging.getLogger(__name__)

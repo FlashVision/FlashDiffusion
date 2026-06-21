@@ -37,8 +37,8 @@ class DDPMScheduler(BaseScheduler):
 
         pred_original = torch.clamp(pred_original, -1, 1)
 
-        coeff1 = (alpha_prod_t_prev ** 0.5 * beta_t) / (1 - alpha_prod_t)
-        coeff2 = ((1 - alpha_prod_t_prev) ** 0.5 * self.alphas[t] ** 0.5) / (1 - alpha_prod_t) * (1 - alpha_prod_t_prev) / (1 - alpha_prod_t) if t > 0 else 0
+        (alpha_prod_t_prev ** 0.5 * beta_t) / (1 - alpha_prod_t)
+        ((1 - alpha_prod_t_prev) ** 0.5 * self.alphas[t] ** 0.5) / (1 - alpha_prod_t) * (1 - alpha_prod_t_prev) / (1 - alpha_prod_t) if t > 0 else 0
 
         mean = (alpha_prod_t_prev ** 0.5 * beta_t / (1 - alpha_prod_t)) * pred_original + \
                (self.alphas[t] ** 0.5 * (1 - alpha_prod_t_prev) / (1 - alpha_prod_t)) * sample

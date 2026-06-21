@@ -38,7 +38,7 @@ class EulerScheduler(BaseScheduler):
         sigma = self.sigmas[step_idx]
         sigma_next = self.sigmas[step_idx + 1]
 
-        pred_x0 = sample - sigma * model_output
+        sample - sigma * model_output
         dt = sigma_next - sigma
         prev_sample = sample + dt * model_output
 

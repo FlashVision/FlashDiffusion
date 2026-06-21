@@ -1,9 +1,8 @@
 """ImageGenerator — high-level text-to-image generation with sensible defaults."""
 
 import logging
-from typing import List, Optional, Union
+from typing import List, Optional
 
-import torch
 from PIL import Image
 
 logger = logging.getLogger(__name__)
