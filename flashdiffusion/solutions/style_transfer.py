@@ -46,6 +46,7 @@ class StyleTransfer:
     def pipe(self):
         if self._pipe is None:
             from flashdiffusion.pipelines import Img2ImgPipeline
+
             self._pipe = Img2ImgPipeline(model_id=self.model_id, device=self.device)
         return self._pipe
 

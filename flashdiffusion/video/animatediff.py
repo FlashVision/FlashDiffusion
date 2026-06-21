@@ -66,12 +66,20 @@ class TemporalAttention(nn.Module):
         pos = self.pos_embedding[:, :num_frames, :]
         x = x + pos
 
-        qkv = self.to_qkv(x).reshape(
-            batch_size * h * w, num_frames, 3, self.num_heads, self.head_dim,
-        ).permute(2, 0, 3, 1, 4)
+        qkv = (
+            self.to_qkv(x)
+            .reshape(
+                batch_size * h * w,
+                num_frames,
+                3,
+                self.num_heads,
+                self.head_dim,
+            )
+            .permute(2, 0, 3, 1, 4)
+        )
         q, k, v = qkv[0], qkv[1], qkv[2]
 
-        scale = self.head_dim ** -0.5
+        scale = self.head_dim**-0.5
         attn = (q @ k.transpose(-2, -1)) * scale
         attn = attn.softmax(dim=-1)
         out = attn @ v
@@ -112,14 +120,20 @@ class AnimateDiffMotionModule(nn.Module):
 
         for i, channels in enumerate(channels_list):
             self.temporal_attentions[f"down_{i}"] = TemporalAttention(
-                channels, num_heads=num_heads, num_frames=num_frames,
+                channels,
+                num_heads=num_heads,
+                num_frames=num_frames,
             )
             self.temporal_attentions[f"up_{i}"] = TemporalAttention(
-                channels, num_heads=num_heads, num_frames=num_frames,
+                channels,
+                num_heads=num_heads,
+                num_frames=num_frames,
             )
 
         self.temporal_attentions["mid"] = TemporalAttention(
-            channels_list[-1], num_heads=num_heads, num_frames=num_frames,
+            channels_list[-1],
+            num_heads=num_heads,
+            num_frames=num_frames,
         )
 
     def apply_temporal_attention(
@@ -176,10 +190,12 @@ class AnimateDiffPipeline:
             from diffusers import AnimateDiffPipeline as _AnimPipe, MotionAdapter, DDIMScheduler
 
             adapter = MotionAdapter.from_pretrained(
-                self.motion_adapter_id, torch_dtype=self.torch_dtype,
+                self.motion_adapter_id,
+                torch_dtype=self.torch_dtype,
             )
             self._pipe = _AnimPipe.from_pretrained(
-                self.model_id, motion_adapter=adapter,
+                self.model_id,
+                motion_adapter=adapter,
                 torch_dtype=self.torch_dtype,
             ).to(self.device)
             self._pipe.scheduler = DDIMScheduler.from_config(self._pipe.scheduler.config)
@@ -224,7 +240,8 @@ class AnimateDiffPipeline:
             num_inference_steps=num_inference_steps,
             guidance_scale=guidance_scale,
             num_frames=num_frames,
-            width=width, height=height,
+            width=width,
+            height=height,
             generator=generator,
         )
         return result.frames[0]
@@ -233,7 +250,10 @@ class AnimateDiffPipeline:
         """Save generated frames as an animated GIF."""
         if frames:
             frames[0].save(
-                output_path, save_all=True, append_images=frames[1:],
-                duration=1000 // fps, loop=0,
+                output_path,
+                save_all=True,
+                append_images=frames[1:],
+                duration=1000 // fps,
+                loop=0,
             )
             logger.info("Saved GIF: %s (%d frames, %d fps)", output_path, len(frames), fps)

@@ -33,19 +33,22 @@ class DDPMScheduler(BaseScheduler):
         alpha_prod_t_prev = self.alphas_cumprod[t - 1] if t > 0 else torch.tensor(1.0)
         beta_t = self.betas[t]
 
-        pred_original = (sample - (1 - alpha_prod_t) ** 0.5 * model_output) / alpha_prod_t ** 0.5
+        pred_original = (sample - (1 - alpha_prod_t) ** 0.5 * model_output) / alpha_prod_t**0.5
 
         pred_original = torch.clamp(pred_original, -1, 1)
 
-        (alpha_prod_t_prev ** 0.5 * beta_t) / (1 - alpha_prod_t)
-        ((1 - alpha_prod_t_prev) ** 0.5 * self.alphas[t] ** 0.5) / (1 - alpha_prod_t) * (1 - alpha_prod_t_prev) / (1 - alpha_prod_t) if t > 0 else 0
+        (alpha_prod_t_prev**0.5 * beta_t) / (1 - alpha_prod_t)
+        ((1 - alpha_prod_t_prev) ** 0.5 * self.alphas[t] ** 0.5) / (1 - alpha_prod_t) * (1 - alpha_prod_t_prev) / (
+            1 - alpha_prod_t
+        ) if t > 0 else 0
 
-        mean = (alpha_prod_t_prev ** 0.5 * beta_t / (1 - alpha_prod_t)) * pred_original + \
-               (self.alphas[t] ** 0.5 * (1 - alpha_prod_t_prev) / (1 - alpha_prod_t)) * sample
+        mean = (alpha_prod_t_prev**0.5 * beta_t / (1 - alpha_prod_t)) * pred_original + (
+            self.alphas[t] ** 0.5 * (1 - alpha_prod_t_prev) / (1 - alpha_prod_t)
+        ) * sample
 
         if t > 0:
             variance = beta_t * (1 - alpha_prod_t_prev) / (1 - alpha_prod_t)
             noise = torch.randn(sample.shape, generator=generator, device=sample.device, dtype=sample.dtype)
-            return mean + variance ** 0.5 * noise
+            return mean + variance**0.5 * noise
 
         return mean

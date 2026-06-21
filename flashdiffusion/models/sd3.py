@@ -89,39 +89,63 @@ class MMDiTBlock(nn.Module):
         img_norm = self.norm1_img(img_tokens) * (1 + scale_img) + shift_img
         txt_norm = self.norm1_txt(txt_tokens) * (1 + scale_txt) + shift_txt
 
-        qkv_img = self.qkv_img(img_norm).reshape(
-            img_norm.shape[0], img_norm.shape[1], 3, self.num_heads, self.head_dim,
-        ).permute(2, 0, 3, 1, 4)
-        qkv_txt = self.qkv_txt(txt_norm).reshape(
-            txt_norm.shape[0], txt_norm.shape[1], 3, self.num_heads, self.head_dim,
-        ).permute(2, 0, 3, 1, 4)
+        qkv_img = (
+            self.qkv_img(img_norm)
+            .reshape(
+                img_norm.shape[0],
+                img_norm.shape[1],
+                3,
+                self.num_heads,
+                self.head_dim,
+            )
+            .permute(2, 0, 3, 1, 4)
+        )
+        qkv_txt = (
+            self.qkv_txt(txt_norm)
+            .reshape(
+                txt_norm.shape[0],
+                txt_norm.shape[1],
+                3,
+                self.num_heads,
+                self.head_dim,
+            )
+            .permute(2, 0, 3, 1, 4)
+        )
 
         q = torch.cat([qkv_img[0], qkv_txt[0]], dim=2)
         k = torch.cat([qkv_img[1], qkv_txt[1]], dim=2)
         v = torch.cat([qkv_img[2], qkv_txt[2]], dim=2)
 
-        scale = self.head_dim ** -0.5
+        scale = self.head_dim**-0.5
         attn = (q @ k.transpose(-2, -1)) * scale
         attn = attn.softmax(dim=-1)
         out = attn @ v
 
         n_img = img_norm.shape[1]
-        img_attn = out[:, :, :n_img].transpose(1, 2).reshape(
-            img_norm.shape[0], n_img, self.hidden_size,
+        img_attn = (
+            out[:, :, :n_img]
+            .transpose(1, 2)
+            .reshape(
+                img_norm.shape[0],
+                n_img,
+                self.hidden_size,
+            )
         )
-        txt_attn = out[:, :, n_img:].transpose(1, 2).reshape(
-            txt_norm.shape[0], txt_norm.shape[1], self.hidden_size,
+        txt_attn = (
+            out[:, :, n_img:]
+            .transpose(1, 2)
+            .reshape(
+                txt_norm.shape[0],
+                txt_norm.shape[1],
+                self.hidden_size,
+            )
         )
 
         img_tokens = img_tokens + gate_img * self.proj_img(img_attn)
         txt_tokens = txt_tokens + gate_txt * self.proj_txt(txt_attn)
 
-        img_tokens = img_tokens + gate_img * self.mlp_img(
-            self.norm2_img(img_tokens) * (1 + scale_img) + shift_img
-        )
-        txt_tokens = txt_tokens + gate_txt * self.mlp_txt(
-            self.norm2_txt(txt_tokens) * (1 + scale_txt) + shift_txt
-        )
+        img_tokens = img_tokens + gate_img * self.mlp_img(self.norm2_img(img_tokens) * (1 + scale_img) + shift_img)
+        txt_tokens = txt_tokens + gate_txt * self.mlp_txt(self.norm2_txt(txt_tokens) * (1 + scale_txt) + shift_txt)
 
         return img_tokens, txt_tokens
 
@@ -215,7 +239,8 @@ class SD3Pipeline:
             from diffusers import StableDiffusion3Pipeline
 
             self._pipe = StableDiffusion3Pipeline.from_pretrained(
-                self.model_id, torch_dtype=self.torch_dtype,
+                self.model_id,
+                torch_dtype=self.torch_dtype,
             ).to(self.device)
             logger.info("SD3 pipeline loaded: %s", self.model_id)
         return self._pipe
@@ -236,11 +261,14 @@ class SD3Pipeline:
             generator = torch.Generator(device=self.device).manual_seed(seed)
 
         result = self.pipe(
-            prompt=prompt, negative_prompt=negative_prompt,
+            prompt=prompt,
+            negative_prompt=negative_prompt,
             num_inference_steps=num_inference_steps,
             guidance_scale=guidance_scale,
-            width=width, height=height,
-            generator=generator, num_images_per_prompt=num_images,
+            width=width,
+            height=height,
+            generator=generator,
+            num_images_per_prompt=num_images,
         )
         return result.images
 
@@ -271,7 +299,8 @@ class FLUXPipeline:
             from diffusers import FluxPipeline
 
             self._pipe = FluxPipeline.from_pretrained(
-                self.model_id, torch_dtype=self.torch_dtype,
+                self.model_id,
+                torch_dtype=self.torch_dtype,
             ).to(self.device)
             logger.info("FLUX pipeline loaded: %s", self.model_id)
         return self._pipe
@@ -294,7 +323,9 @@ class FLUXPipeline:
             prompt=prompt,
             num_inference_steps=num_inference_steps,
             guidance_scale=guidance_scale,
-            width=width, height=height,
-            generator=generator, num_images_per_prompt=num_images,
+            width=width,
+            height=height,
+            generator=generator,
+            num_images_per_prompt=num_images,
         )
         return result.images

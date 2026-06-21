@@ -141,7 +141,7 @@ class DecoupledCrossAttention(nn.Module):
         v_ip = self.to_v_ip(image_embeds).reshape(batch, -1, self.num_heads, self.head_dim).transpose(1, 2)
         q = query.reshape(batch, seq_len, self.num_heads, self.head_dim).transpose(1, 2)
 
-        scale = self.head_dim ** -0.5
+        scale = self.head_dim**-0.5
         attn = (q @ k_ip.transpose(-2, -1)) * scale
         attn = attn.softmax(dim=-1)
         out = attn @ v_ip
@@ -217,7 +217,8 @@ class IPAdapter:
             ip_adapter_image_embeds=[image_embeds],
             num_inference_steps=num_inference_steps,
             guidance_scale=guidance_scale,
-            width=width, height=height,
+            width=width,
+            height=height,
             generator=generator,
         )
         return result.images

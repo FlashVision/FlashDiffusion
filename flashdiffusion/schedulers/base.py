@@ -43,9 +43,7 @@ class BaseScheduler(ABC):
         if self.beta_schedule == "linear":
             return torch.linspace(self.beta_start, self.beta_end, self.num_train_timesteps)
         elif self.beta_schedule == "scaled_linear":
-            return torch.linspace(
-                self.beta_start**0.5, self.beta_end**0.5, self.num_train_timesteps
-            ) ** 2
+            return torch.linspace(self.beta_start**0.5, self.beta_end**0.5, self.num_train_timesteps) ** 2
         elif self.beta_schedule == "cosine":
             steps = self.num_train_timesteps + 1
             t = torch.linspace(0, 1, steps)

@@ -37,16 +37,22 @@ class SDXLDualTextEncoder(nn.Module):
         from transformers import CLIPTextModel, CLIPTextModelWithProjection, CLIPTokenizer
 
         self._encoder_1 = CLIPTextModel.from_pretrained(
-            self.model_id, subfolder="text_encoder", torch_dtype=self.torch_dtype,
+            self.model_id,
+            subfolder="text_encoder",
+            torch_dtype=self.torch_dtype,
         )
         self._encoder_2 = CLIPTextModelWithProjection.from_pretrained(
-            self.model_id, subfolder="text_encoder_2", torch_dtype=self.torch_dtype,
+            self.model_id,
+            subfolder="text_encoder_2",
+            torch_dtype=self.torch_dtype,
         )
         self._tokenizer_1 = CLIPTokenizer.from_pretrained(
-            self.model_id, subfolder="tokenizer",
+            self.model_id,
+            subfolder="tokenizer",
         )
         self._tokenizer_2 = CLIPTokenizer.from_pretrained(
-            self.model_id, subfolder="tokenizer_2",
+            self.model_id,
+            subfolder="tokenizer_2",
         )
         logger.info("SDXL dual text encoders loaded from %s", self.model_id)
 
@@ -92,14 +98,18 @@ class SDXLDualTextEncoder(nn.Module):
             pooled_prompt_embeds: Pooled output from encoder_2 (B, 1280).
         """
         tokens_1 = self.tokenizer_1(
-            prompt, padding="max_length",
+            prompt,
+            padding="max_length",
             max_length=self.tokenizer_1.model_max_length,
-            truncation=True, return_tensors="pt",
+            truncation=True,
+            return_tensors="pt",
         )
         tokens_2 = self.tokenizer_2(
-            prompt, padding="max_length",
+            prompt,
+            padding="max_length",
             max_length=self.tokenizer_2.model_max_length,
-            truncation=True, return_tensors="pt",
+            truncation=True,
+            return_tensors="pt",
         )
 
         if device is not None:

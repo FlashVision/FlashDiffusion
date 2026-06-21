@@ -14,8 +14,10 @@ if TYPE_CHECKING:
 def _get_plt():
     """Lazy-import matplotlib to avoid hard dependency at module level."""
     import matplotlib
+
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
+
     return plt
 
 

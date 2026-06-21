@@ -28,15 +28,14 @@ class LCMScheduler(BaseScheduler):
         t = timestep
         alpha_prod_t = self.alphas_cumprod[t]
 
-        pred_x0 = (sample - (1 - alpha_prod_t) ** 0.5 * model_output) / alpha_prod_t ** 0.5
+        pred_x0 = (sample - (1 - alpha_prod_t) ** 0.5 * model_output) / alpha_prod_t**0.5
         pred_x0 = torch.clamp(pred_x0, -1, 1)
 
         t_prev = max(t - self.num_train_timesteps // self.num_inference_steps, 0)
 
         if t_prev > 0:
             alpha_prod_t_prev = self.alphas_cumprod[t_prev]
-            prev_sample = alpha_prod_t_prev ** 0.5 * pred_x0 + \
-                          (1 - alpha_prod_t_prev) ** 0.5 * model_output
+            prev_sample = alpha_prod_t_prev**0.5 * pred_x0 + (1 - alpha_prod_t_prev) ** 0.5 * model_output
         else:
             prev_sample = pred_x0
 

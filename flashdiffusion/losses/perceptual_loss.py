@@ -29,6 +29,7 @@ class PerceptualLoss(nn.Module):
     def vgg(self):
         if self._vgg is None:
             from torchvision.models import vgg19
+
             vgg = vgg19(pretrained=True).features
             vgg.eval()
             for p in vgg.parameters():

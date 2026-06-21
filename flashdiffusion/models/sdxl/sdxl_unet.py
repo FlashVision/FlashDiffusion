@@ -42,7 +42,9 @@ class SDXLUNetWrapper(nn.Module):
         from diffusers import UNet2DConditionModel
 
         self._unet = UNet2DConditionModel.from_pretrained(
-            self.model_id, subfolder="unet", torch_dtype=self.torch_dtype,
+            self.model_id,
+            subfolder="unet",
+            torch_dtype=self.torch_dtype,
         )
         logger.info("SDXL UNet loaded from %s", self.model_id)
 
@@ -66,7 +68,8 @@ class SDXLUNetWrapper(nn.Module):
             Predicted noise tensor.
         """
         output = self.unet(
-            sample, timestep,
+            sample,
+            timestep,
             encoder_hidden_states=encoder_hidden_states,
             added_cond_kwargs=added_cond_kwargs,
             **kwargs,
@@ -92,10 +95,9 @@ class SDXLUNetWrapper(nn.Module):
             Time IDs tensor of shape (1, 6).
         """
         return torch.tensor(
-            [original_size[0], original_size[1],
-             crop_coords[0], crop_coords[1],
-             target_size[0], target_size[1]],
-            dtype=dtype, device=device,
+            [original_size[0], original_size[1], crop_coords[0], crop_coords[1], target_size[0], target_size[1]],
+            dtype=dtype,
+            device=device,
         ).unsqueeze(0)
 
     def get_attention_layers(self) -> Dict[str, nn.Module]:

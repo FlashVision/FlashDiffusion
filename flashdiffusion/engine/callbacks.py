@@ -114,6 +114,7 @@ class TensorBoardCallback(Callback):
 
     def on_train_start(self, trainer: Any) -> None:
         from torch.utils.tensorboard import SummaryWriter
+
         self._writer = SummaryWriter(self.log_dir)
 
     def on_step_end(self, trainer: Any, step: int, loss: float) -> None:

@@ -9,7 +9,6 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from flashdiffusion.models.lora import apply_lora, get_lora_state_dict
-from flashdiffusion.data import create_dataloader
 from flashdiffusion.utils import setup_logger, AverageMeter
 from flashdiffusion.utils.checkpoint import save_checkpoint
 from flashdiffusion.engine.callbacks import CallbackList, Callback
@@ -108,7 +107,9 @@ class Trainer:
         """Apply Config dataclass overrides."""
         if hasattr(cfg, "model"):
             self.model_id = cfg.model.model_id
-            self.resolution = cfg.model.resolution[0] if isinstance(cfg.model.resolution, tuple) else cfg.model.resolution
+            self.resolution = (
+                cfg.model.resolution[0] if isinstance(cfg.model.resolution, tuple) else cfg.model.resolution
+            )
         if hasattr(cfg, "train"):
             self.method = cfg.train.method
             self.max_train_steps = cfg.train.max_train_steps
@@ -177,6 +178,8 @@ class Trainer:
 
         lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=self.max_train_steps)
 
+        from flashdiffusion.data import create_dataloader
+
         dataloader = create_dataloader(
             data_dir=self.train_data,
             prompt=self.instance_prompt,
@@ -208,7 +211,9 @@ class Trainer:
                     encoder_hidden_states = text_encoder(input_ids)[0]
 
                 noise = torch.randn_like(latents)
-                timesteps = torch.randint(0, noise_scheduler.config.num_train_timesteps, (latents.shape[0],), device=self.device).long()
+                timesteps = torch.randint(
+                    0, noise_scheduler.config.num_train_timesteps, (latents.shape[0],), device=self.device
+                ).long()
                 noisy_latents = noise_scheduler.add_noise(latents, noise, timesteps)
 
                 with torch.amp.autocast(self.device.type, enabled=use_amp):
@@ -260,8 +265,10 @@ class Trainer:
         from diffusers import StableDiffusionPipeline, DDPMScheduler
 
         pipe = StableDiffusionPipeline.from_pretrained(
-            self.model_id, torch_dtype=torch.float32,
-            safety_checker=None, requires_safety_checker=False,
+            self.model_id,
+            torch_dtype=torch.float32,
+            safety_checker=None,
+            requires_safety_checker=False,
         )
 
         unet = pipe.unet.to(self.device)
@@ -274,6 +281,8 @@ class Trainer:
         text_encoder.requires_grad_(False)
 
         optimizer = torch.optim.AdamW(unet.parameters(), lr=self.learning_rate, weight_decay=1e-2)
+
+        from flashdiffusion.data import create_dataloader
 
         dataloader = create_dataloader(
             data_dir=self.train_data,
@@ -304,7 +313,9 @@ class Trainer:
                     encoder_hidden_states = text_encoder(input_ids)[0]
 
                 noise = torch.randn_like(latents)
-                timesteps = torch.randint(0, noise_scheduler.config.num_train_timesteps, (latents.shape[0],), device=self.device).long()
+                timesteps = torch.randint(
+                    0, noise_scheduler.config.num_train_timesteps, (latents.shape[0],), device=self.device
+                ).long()
                 noisy_latents = noise_scheduler.add_noise(latents, noise, timesteps)
 
                 noise_pred = unet(noisy_latents, timesteps, encoder_hidden_states).sample
@@ -321,8 +332,9 @@ class Trainer:
                 if global_step % 50 == 0:
                     self._logger.info(f"  Step {global_step}/{self.max_train_steps} | Loss: {loss_meter.avg:.6f}")
 
-        save_checkpoint(unet, optimizer, global_step, loss_meter.avg,
-                        os.path.join(self.save_dir, "dreambooth_unet.pth"))
+        save_checkpoint(
+            unet, optimizer, global_step, loss_meter.avg, os.path.join(self.save_dir, "dreambooth_unet.pth")
+        )
         return {"final_loss": loss_meter.avg, "total_steps": global_step}
 
     def _train_textual_inversion(self) -> Dict[str, float]:
@@ -332,8 +344,10 @@ class Trainer:
         from diffusers import StableDiffusionPipeline, DDPMScheduler
 
         pipe = StableDiffusionPipeline.from_pretrained(
-            self.model_id, torch_dtype=torch.float32,
-            safety_checker=None, requires_safety_checker=False,
+            self.model_id,
+            torch_dtype=torch.float32,
+            safety_checker=None,
+            requires_safety_checker=False,
         )
 
         tokenizer = pipe.tokenizer
@@ -348,8 +362,9 @@ class Trainer:
         placeholder_token_id = tokenizer.convert_tokens_to_ids(self.placeholder_token)
         initializer_token_id = tokenizer.encode(self.initializer_token, add_special_tokens=False)[0]
 
-        text_encoder.get_input_embeddings().weight.data[placeholder_token_id] = \
+        text_encoder.get_input_embeddings().weight.data[placeholder_token_id] = (
             text_encoder.get_input_embeddings().weight.data[initializer_token_id].clone()
+        )
 
         vae.requires_grad_(False)
         unet.requires_grad_(False)
@@ -357,6 +372,8 @@ class Trainer:
         text_encoder.get_input_embeddings().weight.requires_grad = True
 
         optimizer = torch.optim.AdamW([text_encoder.get_input_embeddings().weight], lr=self.learning_rate)
+
+        from flashdiffusion.data import create_dataloader
 
         dataloader = create_dataloader(
             data_dir=self.train_data,
@@ -381,7 +398,9 @@ class Trainer:
                     latents = vae.encode(pixel_values).latent_dist.sample() * 0.18215
 
                 noise = torch.randn_like(latents)
-                timesteps = torch.randint(0, noise_scheduler.config.num_train_timesteps, (latents.shape[0],), device=self.device).long()
+                timesteps = torch.randint(
+                    0, noise_scheduler.config.num_train_timesteps, (latents.shape[0],), device=self.device
+                ).long()
                 noisy_latents = noise_scheduler.add_noise(latents, noise, timesteps)
 
                 encoder_hidden_states = text_encoder(input_ids)[0]
@@ -397,8 +416,9 @@ class Trainer:
                 with torch.no_grad():
                     mask = torch.ones(len(tokenizer), dtype=torch.bool)
                     mask[placeholder_token_id] = False
-                    text_encoder.get_input_embeddings().weight.data[mask] = \
+                    text_encoder.get_input_embeddings().weight.data[mask] = (
                         text_encoder.get_input_embeddings().weight.data[mask].detach()
+                    )
 
                 loss_meter.update(loss.item())
                 global_step += 1

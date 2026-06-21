@@ -2,6 +2,8 @@ from flashdiffusion.video.animatediff import AnimateDiffMotionModule, AnimateDif
 from flashdiffusion.video.svd import SVDPipeline, TemporalUNetWrapper
 
 __all__ = [
-    "AnimateDiffMotionModule", "AnimateDiffPipeline",
-    "SVDPipeline", "TemporalUNetWrapper",
+    "AnimateDiffMotionModule",
+    "AnimateDiffPipeline",
+    "SVDPipeline",
+    "TemporalUNetWrapper",
 ]

@@ -37,6 +37,7 @@ class Txt2ImgPipeline:
     def pipe(self):
         if self._pipe is None:
             from diffusers import StableDiffusionPipeline
+
             self._pipe = StableDiffusionPipeline.from_pretrained(
                 self.model_id,
                 torch_dtype=self.torch_dtype,

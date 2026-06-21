@@ -38,7 +38,8 @@ class SDXLPipeline:
             from diffusers import StableDiffusionXLPipeline
 
             self._pipe = StableDiffusionXLPipeline.from_pretrained(
-                self.model_id, torch_dtype=self.torch_dtype,
+                self.model_id,
+                torch_dtype=self.torch_dtype,
                 use_safetensors=True,
             ).to(self.device)
             logger.info("SDXL pipeline loaded: %s", self.model_id)
@@ -131,7 +132,8 @@ class SDXLRefinerPipeline:
             from diffusers import StableDiffusionXLImg2ImgPipeline
 
             self._pipe = StableDiffusionXLImg2ImgPipeline.from_pretrained(
-                self.model_id, torch_dtype=self.torch_dtype,
+                self.model_id,
+                torch_dtype=self.torch_dtype,
                 use_safetensors=True,
             ).to(self.device)
             logger.info("SDXL refiner loaded: %s", self.model_id)

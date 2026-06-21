@@ -45,9 +45,12 @@ def apply_lora(
     total = sum(p.numel() for p in unet.parameters())
     trainable = sum(p.numel() for p in unet.parameters() if p.requires_grad)
     logger.info(
-        "LoRA applied: %d layers adapted (rank=%d, alpha=%.1f). "
-        "Trainable: %d / %d params (%.1f%%)",
-        len(replaced), rank, alpha, trainable, total,
+        "LoRA applied: %d layers adapted (rank=%d, alpha=%.1f). Trainable: %d / %d params (%.1f%%)",
+        len(replaced),
+        rank,
+        alpha,
+        trainable,
+        total,
         100.0 * trainable / max(total, 1),
     )
 
@@ -104,14 +107,8 @@ class LoRALinear(nn.Module):
         self.rank = rank
         self.scaling = alpha / rank
 
-        self.weight = nn.Parameter(
-            torch.empty(out_features, in_features), requires_grad=False
-        )
-        self.bias = (
-            nn.Parameter(torch.zeros(out_features), requires_grad=False)
-            if bias
-            else None
-        )
+        self.weight = nn.Parameter(torch.empty(out_features, in_features), requires_grad=False)
+        self.bias = nn.Parameter(torch.zeros(out_features), requires_grad=False) if bias else None
 
         self.lora_A = nn.Parameter(torch.empty(rank, in_features))
         self.lora_B = nn.Parameter(torch.zeros(out_features, rank))
@@ -121,9 +118,7 @@ class LoRALinear(nn.Module):
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         base_out = nn.functional.linear(x, self.weight, self.bias)
-        lora_out = (
-            self.lora_dropout(x) @ self.lora_A.T @ self.lora_B.T * self.scaling
-        )
+        lora_out = self.lora_dropout(x) @ self.lora_A.T @ self.lora_B.T * self.scaling
         return base_out + lora_out
 
 
@@ -148,10 +143,7 @@ def merge_lora_weights(model: nn.Module) -> nn.Module:
 
 def get_lora_state_dict(model: nn.Module) -> Dict[str, torch.Tensor]:
     """Extract only LoRA adapter weights for saving."""
-    return {
-        k: v for k, v in model.state_dict().items()
-        if "lora_A" in k or "lora_B" in k
-    }
+    return {k: v for k, v in model.state_dict().items() if "lora_A" in k or "lora_B" in k}
 
 
 def load_lora_weights(model: nn.Module, lora_path: str, device: str = "cpu"):

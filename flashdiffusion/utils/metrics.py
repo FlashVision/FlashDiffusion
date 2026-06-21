@@ -71,10 +71,7 @@ def compute_fid(
             return float(score)
 
     except ImportError:
-        raise ImportError(
-            "clean-fid is required for FID computation. "
-            "Install with: pip install clean-fid"
-        )
+        raise ImportError("clean-fid is required for FID computation. Install with: pip install clean-fid")
 
 
 def compute_inception_score(
@@ -100,12 +97,14 @@ def compute_inception_score(
         model = inception_v3(pretrained=True, transform_input=False)
         model.eval()
 
-        transform = T.Compose([
-            T.Resize(299),
-            T.CenterCrop(299),
-            T.ToTensor(),
-            T.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5]),
-        ])
+        transform = T.Compose(
+            [
+                T.Resize(299),
+                T.CenterCrop(299),
+                T.ToTensor(),
+                T.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5]),
+            ]
+        )
 
         preds = []
         for img in images:
@@ -118,7 +117,7 @@ def compute_inception_score(
         split_scores = []
         n = len(preds)
         for k in range(splits):
-            part = preds[k * n // splits: (k + 1) * n // splits]
+            part = preds[k * n // splits : (k + 1) * n // splits]
             py = np.mean(part, axis=0, keepdims=True)
             scores = np.sum(part * np.log(part / py + 1e-10), axis=1)
             split_scores.append(np.exp(np.mean(scores)))

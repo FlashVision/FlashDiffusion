@@ -12,6 +12,7 @@ from typing import List, Optional, Tuple
 @dataclass
 class DataConfig:
     """Dataset paths for LoRA / DreamBooth training."""
+
     train_data: str = "data/train"
     instance_prompt: str = "a photo of sks subject"
     class_prompt: Optional[str] = None
@@ -24,6 +25,7 @@ class DataConfig:
 @dataclass
 class ModelConfig:
     """Model configuration."""
+
     name: str = "FlashDiffusion"
     model_id: str = "runwayml/stable-diffusion-v1-5"
     revision: Optional[str] = None
@@ -41,6 +43,7 @@ class ModelConfig:
 @dataclass
 class TrainConfig:
     """Training hyperparameters."""
+
     method: str = "lora"
     max_train_steps: int = 1000
     learning_rate: float = 1e-4
@@ -83,6 +86,7 @@ class TrainConfig:
 @dataclass
 class Config:
     """Top-level configuration."""
+
     data: DataConfig = field(default_factory=DataConfig)
     model: ModelConfig = field(default_factory=ModelConfig)
     train: TrainConfig = field(default_factory=TrainConfig)

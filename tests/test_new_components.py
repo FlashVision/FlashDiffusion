@@ -95,14 +95,18 @@ class TestTemporalAttention:
 class TestAnimateDiffMotionModule:
     def test_module_creation(self):
         module = AnimateDiffMotionModule(
-            channels_list=[64, 128], num_frames=8, num_heads=4,
+            channels_list=[64, 128],
+            num_frames=8,
+            num_heads=4,
         )
         assert "down_0" in module.temporal_attentions
         assert "mid" in module.temporal_attentions
 
     def test_apply_temporal(self):
         module = AnimateDiffMotionModule(
-            channels_list=[64], num_frames=4, num_heads=4,
+            channels_list=[64],
+            num_frames=4,
+            num_heads=4,
         )
         x = torch.randn(8, 64, 4, 4)
         out = module.apply_temporal_attention(x, "down_0")
@@ -124,8 +128,12 @@ class TestESRGAN:
 
     def test_rrdbnet_forward(self):
         model = RRDBNet(
-            in_channels=3, out_channels=3, num_features=32,
-            num_blocks=2, growth_rate=16, scale=4,
+            in_channels=3,
+            out_channels=3,
+            num_features=32,
+            num_blocks=2,
+            growth_rate=16,
+            scale=4,
         )
         x = torch.randn(1, 3, 16, 16)
         out = model(x)
@@ -133,8 +141,12 @@ class TestESRGAN:
 
     def test_rrdbnet_2x(self):
         model = RRDBNet(
-            in_channels=3, out_channels=3, num_features=32,
-            num_blocks=2, growth_rate=16, scale=2,
+            in_channels=3,
+            out_channels=3,
+            num_features=32,
+            num_blocks=2,
+            growth_rate=16,
+            scale=2,
         )
         x = torch.randn(1, 3, 16, 16)
         out = model(x)

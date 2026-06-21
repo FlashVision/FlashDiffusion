@@ -96,9 +96,7 @@ class RRDBNet(nn.Module):
 
         self.conv_first = nn.Conv2d(in_channels, num_features, 3, 1, 1)
 
-        self.body = nn.Sequential(*[
-            RRDB(num_features, growth_rate) for _ in range(num_blocks)
-        ])
+        self.body = nn.Sequential(*[RRDB(num_features, growth_rate) for _ in range(num_blocks)])
         self.conv_body = nn.Conv2d(num_features, num_features, 3, 1, 1)
 
         self.upsampler = nn.ModuleList()
@@ -226,8 +224,8 @@ class ESRGANUpscaler:
                 oh = (y_end - y) * self.scale
                 ow = (x_end - x) * self.scale
 
-                output[:, :, oy:oy + oh, ox:ox + ow] += tile_output
-                weight[:, :, oy:oy + oh, ox:ox + ow] += 1
+                output[:, :, oy : oy + oh, ox : ox + ow] += tile_output
+                weight[:, :, oy : oy + oh, ox : ox + ow] += 1
 
         return output / weight.clamp(min=1)
 

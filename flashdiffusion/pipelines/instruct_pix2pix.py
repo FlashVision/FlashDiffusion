@@ -54,7 +54,8 @@ class InstructPix2PixPipeline:
             from diffusers import StableDiffusionInstructPix2PixPipeline, EulerAncestralDiscreteScheduler
 
             self._pipe = StableDiffusionInstructPix2PixPipeline.from_pretrained(
-                self.model_id, torch_dtype=self.torch_dtype,
+                self.model_id,
+                torch_dtype=self.torch_dtype,
                 safety_checker=None,
             ).to(self.device)
             self._pipe.scheduler = EulerAncestralDiscreteScheduler.from_config(

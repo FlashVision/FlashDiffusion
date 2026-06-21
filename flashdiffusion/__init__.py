@@ -14,9 +14,17 @@ from flashdiffusion.solutions import ImageGenerator
 from flashdiffusion.analytics import Benchmark
 
 __all__ = [
-    "FlashDiffusion", "Trainer", "Predictor", "Validator", "Exporter",
-    "apply_lora", "merge_lora_weights", "get_config",
-    "Txt2ImgPipeline", "Img2ImgPipeline", "InpaintingPipeline",
+    "FlashDiffusion",
+    "Trainer",
+    "Predictor",
+    "Validator",
+    "Exporter",
+    "apply_lora",
+    "merge_lora_weights",
+    "get_config",
+    "Txt2ImgPipeline",
+    "Img2ImgPipeline",
+    "InpaintingPipeline",
     "ImageGenerator",
     "Benchmark",
     "__version__",

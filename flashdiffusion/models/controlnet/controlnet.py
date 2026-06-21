@@ -246,7 +246,8 @@ class SDXLControlNetWrapper:
             num_inference_steps=num_inference_steps,
             guidance_scale=guidance_scale,
             controlnet_conditioning_scale=controlnet_conditioning_scale,
-            width=width, height=height,
+            width=width,
+            height=height,
             generator=generator,
         )
         return result.images

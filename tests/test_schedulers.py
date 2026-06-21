@@ -3,15 +3,26 @@
 import torch
 import pytest
 from flashdiffusion.schedulers import (
-    DDPMScheduler, DDIMScheduler, DPMPlusPlusScheduler,
-    EulerScheduler, EulerAncestralScheduler, LCMScheduler,
+    DDPMScheduler,
+    DDIMScheduler,
+    DPMPlusPlusScheduler,
+    EulerScheduler,
+    EulerAncestralScheduler,
+    LCMScheduler,
 )
 
 
-@pytest.mark.parametrize("SchedulerCls", [
-    DDPMScheduler, DDIMScheduler, DPMPlusPlusScheduler,
-    EulerScheduler, EulerAncestralScheduler, LCMScheduler,
-])
+@pytest.mark.parametrize(
+    "SchedulerCls",
+    [
+        DDPMScheduler,
+        DDIMScheduler,
+        DPMPlusPlusScheduler,
+        EulerScheduler,
+        EulerAncestralScheduler,
+        LCMScheduler,
+    ],
+)
 def test_scheduler_set_timesteps(SchedulerCls):
     """All schedulers should produce valid timesteps after set_timesteps."""
     scheduler = SchedulerCls(num_train_timesteps=1000)
@@ -19,9 +30,14 @@ def test_scheduler_set_timesteps(SchedulerCls):
     assert len(scheduler.timesteps) == 20
 
 
-@pytest.mark.parametrize("SchedulerCls", [
-    DDIMScheduler, DPMPlusPlusScheduler, LCMScheduler,
-])
+@pytest.mark.parametrize(
+    "SchedulerCls",
+    [
+        DDIMScheduler,
+        DPMPlusPlusScheduler,
+        LCMScheduler,
+    ],
+)
 def test_scheduler_step_output_shape(SchedulerCls):
     """Scheduler step should return tensor with same shape as input."""
     scheduler = SchedulerCls(num_train_timesteps=1000)

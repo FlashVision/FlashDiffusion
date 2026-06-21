@@ -24,8 +24,7 @@ class ImageGenerator:
     """
 
     DEFAULT_NEGATIVE = (
-        "blurry, low quality, low resolution, ugly, deformed, "
-        "bad anatomy, watermark, text, signature, cropped"
+        "blurry, low quality, low resolution, ugly, deformed, bad anatomy, watermark, text, signature, cropped"
     )
 
     def __init__(
@@ -49,6 +48,7 @@ class ImageGenerator:
     def predictor(self):
         if self._predictor is None:
             from flashdiffusion.engine.predictor import Predictor
+
             self._predictor = Predictor(model_id=self.model_id, device=self.device)
         return self._predictor
 

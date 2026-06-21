@@ -80,6 +80,7 @@ class Validator:
         if reference_dir is not None:
             try:
                 from flashdiffusion.utils.metrics import compute_fid
+
                 fid = compute_fid(all_images, reference_dir)
                 result["fid"] = fid
             except ImportError:

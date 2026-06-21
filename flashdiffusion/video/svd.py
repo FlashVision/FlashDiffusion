@@ -44,7 +44,9 @@ class TemporalUNetWrapper(nn.Module):
         from diffusers import UNetSpatioTemporalConditionModel
 
         self._unet = UNetSpatioTemporalConditionModel.from_pretrained(
-            self.model_id, subfolder="unet", torch_dtype=self.torch_dtype,
+            self.model_id,
+            subfolder="unet",
+            torch_dtype=self.torch_dtype,
         )
         logger.info("SVD temporal UNet loaded from %s", self.model_id)
 
@@ -68,7 +70,8 @@ class TemporalUNetWrapper(nn.Module):
             Predicted noise tensor.
         """
         output = self.unet(
-            sample, timestep,
+            sample,
+            timestep,
             encoder_hidden_states=encoder_hidden_states,
             added_time_ids=added_time_ids,
             **kwargs,
@@ -105,7 +108,8 @@ class SVDPipeline:
             from diffusers import StableVideoDiffusionPipeline
 
             self._pipe = StableVideoDiffusionPipeline.from_pretrained(
-                self.model_id, torch_dtype=self.torch_dtype,
+                self.model_id,
+                torch_dtype=self.torch_dtype,
             ).to(self.device)
             logger.info("SVD pipeline loaded: %s", self.model_id)
         return self._pipe
@@ -166,8 +170,11 @@ class SVDPipeline:
         """Save video frames as an animated GIF."""
         if frames:
             frames[0].save(
-                output_path, save_all=True, append_images=frames[1:],
-                duration=1000 // fps, loop=0,
+                output_path,
+                save_all=True,
+                append_images=frames[1:],
+                duration=1000 // fps,
+                loop=0,
             )
             logger.info("SVD GIF saved: %s (%d frames)", output_path, len(frames))
 

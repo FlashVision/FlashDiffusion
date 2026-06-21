@@ -17,7 +17,11 @@ SCHEDULER_MAP = {
 
 __all__ = [
     "BaseScheduler",
-    "DDPMScheduler", "DDIMScheduler", "DPMPlusPlusScheduler",
-    "EulerScheduler", "EulerAncestralScheduler", "LCMScheduler",
+    "DDPMScheduler",
+    "DDIMScheduler",
+    "DPMPlusPlusScheduler",
+    "EulerScheduler",
+    "EulerAncestralScheduler",
+    "LCMScheduler",
     "SCHEDULER_MAP",
 ]

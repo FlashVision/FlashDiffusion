@@ -5,7 +5,9 @@ from flashdiffusion.pipelines.controlnet_pipe import ControlNetPipeline
 from flashdiffusion.pipelines.instruct_pix2pix import InstructPix2PixPipeline
 
 __all__ = [
-    "Txt2ImgPipeline", "Img2ImgPipeline",
-    "InpaintingPipeline", "ControlNetPipeline",
+    "Txt2ImgPipeline",
+    "Img2ImgPipeline",
+    "InpaintingPipeline",
+    "ControlNetPipeline",
     "InstructPix2PixPipeline",
 ]

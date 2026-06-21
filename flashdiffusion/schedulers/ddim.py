@@ -38,13 +38,15 @@ class DDIMScheduler(BaseScheduler):
         t_prev = max(t - self.num_train_timesteps // self.num_inference_steps, 0)
         alpha_prod_t_prev = self.alphas_cumprod[t_prev]
 
-        pred_x0 = (sample - (1 - alpha_prod_t) ** 0.5 * model_output) / alpha_prod_t ** 0.5
+        pred_x0 = (sample - (1 - alpha_prod_t) ** 0.5 * model_output) / alpha_prod_t**0.5
         pred_x0 = torch.clamp(pred_x0, -1, 1)
 
-        sigma = self.eta * ((1 - alpha_prod_t_prev) / (1 - alpha_prod_t) * (1 - alpha_prod_t / alpha_prod_t_prev)) ** 0.5
+        sigma = (
+            self.eta * ((1 - alpha_prod_t_prev) / (1 - alpha_prod_t) * (1 - alpha_prod_t / alpha_prod_t_prev)) ** 0.5
+        )
 
         pred_dir = (1 - alpha_prod_t_prev - sigma**2).clamp(min=0) ** 0.5 * model_output
-        prev_sample = alpha_prod_t_prev ** 0.5 * pred_x0 + pred_dir
+        prev_sample = alpha_prod_t_prev**0.5 * pred_x0 + pred_dir
 
         if self.eta > 0 and t > 0:
             noise = torch.randn(sample.shape, generator=generator, device=sample.device, dtype=sample.dtype)

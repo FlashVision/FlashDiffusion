@@ -18,6 +18,7 @@ def _print_banner():
 
 def _get_version():
     from flashdiffusion import __version__
+
     return __version__
 
 
@@ -43,11 +44,13 @@ def cmd_settings(args):
     print(f"  NumPy:       {np.__version__}")
     try:
         import diffusers
+
         print(f"  Diffusers:   {diffusers.__version__}")
     except ImportError:
         print("  Diffusers:   Not installed")
     try:
         import transformers
+
         print(f"  Transformers:{transformers.__version__}")
     except ImportError:
         print("  Transformers:Not installed")
@@ -74,6 +77,7 @@ def cmd_check(args):
 
     try:
         import flashdiffusion  # noqa: F401
+
         print(f"  {_colored('✓', 'green')} flashdiffusion package")
     except ImportError as e:
         print(f"  {_colored('✗', 'red')} flashdiffusion package: {e}")
@@ -81,6 +85,7 @@ def cmd_check(args):
 
     try:
         from flashdiffusion.engine import Trainer, Predictor, Exporter, Validator  # noqa: F401
+
         print(f"  {_colored('✓', 'green')} engine (Trainer, Predictor, Exporter, Validator)")
     except ImportError as e:
         print(f"  {_colored('✗', 'red')} engine: {e}")
@@ -88,6 +93,7 @@ def cmd_check(args):
 
     try:
         from flashdiffusion.pipelines import Txt2ImgPipeline, Img2ImgPipeline, InpaintingPipeline  # noqa: F401
+
         print(f"  {_colored('✓', 'green')} pipelines (Txt2Img, Img2Img, Inpainting)")
     except ImportError as e:
         print(f"  {_colored('✗', 'red')} pipelines: {e}")
@@ -95,6 +101,7 @@ def cmd_check(args):
 
     try:
         from flashdiffusion.schedulers import DDPMScheduler, DDIMScheduler, EulerScheduler  # noqa: F401
+
         print(f"  {_colored('✓', 'green')} schedulers (DDPM, DDIM, Euler, ...)")
     except ImportError as e:
         print(f"  {_colored('✗', 'red')} schedulers: {e}")
@@ -102,6 +109,7 @@ def cmd_check(args):
 
     try:
         from flashdiffusion.solutions import ImageGenerator, StyleTransfer, Upscaler  # noqa: F401
+
         print(f"  {_colored('✓', 'green')} solutions (ImageGenerator, StyleTransfer, Upscaler)")
     except ImportError as e:
         print(f"  {_colored('✗', 'red')} solutions: {e}")
@@ -109,6 +117,7 @@ def cmd_check(args):
 
     try:
         from flashdiffusion.analytics import Benchmark, Profiler  # noqa: F401
+
         print(f"  {_colored('✓', 'green')} analytics (Benchmark, Profiler)")
     except ImportError as e:
         print(f"  {_colored('✗', 'red')} analytics: {e}")
@@ -116,12 +125,14 @@ def cmd_check(args):
 
     try:
         import diffusers  # noqa: F401
+
         print(f"  {_colored('✓', 'green')} diffusers ({diffusers.__version__})")
     except ImportError as e:
         print(f"  {_colored('✗', 'red')} diffusers: {e}")
         errors.append(str(e))
 
     import torch
+
     if torch.cuda.is_available():
         print(f"  {_colored('✓', 'green')} CUDA ({torch.cuda.get_device_name(0)})")
     else:
@@ -144,6 +155,7 @@ def cmd_generate(args):
 
     if args.config:
         from flashdiffusion.cfg import load_yaml_config
+
         cfg = load_yaml_config(args.config)
         model_id = cfg.model.model_id
 
@@ -170,6 +182,7 @@ def cmd_train(args):
 
     if args.config:
         from flashdiffusion.cfg import load_yaml_config
+
         cfg = load_yaml_config(args.config)
         print(f"{_colored('Config:', 'bold')} {args.config}")
         trainer = Trainer(config=cfg, device=args.device)
@@ -299,8 +312,12 @@ Documentation: https://github.com/FlashVision/FlashDiffusion
     train_p.add_argument("--config", default=None, help="Path to YAML config")
     train_p.add_argument("--model", default="sd15", help="Model preset or HuggingFace ID")
     train_p.add_argument("--data", default=None, help="Path to training images")
-    train_p.add_argument("--method", default="lora", choices=["lora", "dreambooth", "textual_inversion"],
-                         help="Training method (default: lora)")
+    train_p.add_argument(
+        "--method",
+        default="lora",
+        choices=["lora", "dreambooth", "textual_inversion"],
+        help="Training method (default: lora)",
+    )
     train_p.add_argument("--steps", type=int, default=1000, help="Max training steps (default: 1000)")
     train_p.add_argument("--lora-rank", type=int, default=4, help="LoRA rank (default: 4)")
     train_p.add_argument("--device", default="cuda", help="Device (default: cuda)")

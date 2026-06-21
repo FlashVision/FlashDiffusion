@@ -36,6 +36,7 @@ class Img2ImgPipeline:
     def pipe(self):
         if self._pipe is None:
             from diffusers import StableDiffusionImg2ImgPipeline
+
             self._pipe = StableDiffusionImg2ImgPipeline.from_pretrained(
                 self.model_id,
                 torch_dtype=self.torch_dtype,

@@ -37,6 +37,7 @@ class ControlNetPipeline:
     def pipe(self):
         if self._pipe is None:
             from diffusers import StableDiffusionControlNetPipeline
+
             self._pipe = StableDiffusionControlNetPipeline.from_pretrained(
                 self.model_id,
                 controlnet=self.controlnet.model,

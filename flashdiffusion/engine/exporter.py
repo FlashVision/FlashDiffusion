@@ -61,7 +61,9 @@ class Exporter:
 
         logger.info("Loading UNet for export: %s", self.model_id)
         unet = UNet2DConditionModel.from_pretrained(
-            self.model_id, subfolder="unet", torch_dtype=torch.float32,
+            self.model_id,
+            subfolder="unet",
+            torch_dtype=torch.float32,
         )
         unet.eval()
 

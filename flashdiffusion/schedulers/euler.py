@@ -75,7 +75,7 @@ class EulerAncestralScheduler(BaseScheduler):
         t_prev = max(t - self.num_train_timesteps // self.num_inference_steps, 0)
         alpha_prod_t_prev = self.alphas_cumprod[t_prev]
 
-        pred_x0 = (sample - (1 - alpha_prod_t) ** 0.5 * model_output) / alpha_prod_t ** 0.5
+        pred_x0 = (sample - (1 - alpha_prod_t) ** 0.5 * model_output) / alpha_prod_t**0.5
         pred_x0 = torch.clamp(pred_x0, -1, 1)
 
         sigma_t = ((1 - alpha_prod_t) / alpha_prod_t) ** 0.5
@@ -84,7 +84,7 @@ class EulerAncestralScheduler(BaseScheduler):
         sigma_up = (sigma_t_prev**2 * (sigma_t**2 - sigma_t_prev**2) / sigma_t**2).clamp(min=0) ** 0.5
         sigma_down = (sigma_t_prev**2 - sigma_up**2).clamp(min=0) ** 0.5
 
-        prev_sample = alpha_prod_t_prev ** 0.5 * pred_x0 + sigma_down * model_output
+        prev_sample = alpha_prod_t_prev**0.5 * pred_x0 + sigma_down * model_output
 
         if t > 0:
             noise = torch.randn(sample.shape, generator=generator, device=sample.device, dtype=sample.dtype)

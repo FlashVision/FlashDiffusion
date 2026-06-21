@@ -36,6 +36,7 @@ class FaceAnalyzer:
     def _load(self):
         try:
             import insightface
+
             self._app = insightface.app.FaceAnalysis(name=self.model_name, providers=["CPUExecutionProvider"])
             self._app.prepare(ctx_id=0, det_size=self.det_size)
             logger.info("InsightFace loaded: %s", self.model_name)
@@ -200,9 +201,12 @@ class InstantIDAdapter:
         if face_embedding is None:
             logger.warning("No face detected in reference image, generating without identity conditioning")
             return self.pipe.pipe(
-                prompt=prompt, negative_prompt=negative_prompt,
+                prompt=prompt,
+                negative_prompt=negative_prompt,
                 num_inference_steps=num_inference_steps,
-                guidance_scale=guidance_scale, width=width, height=height,
+                guidance_scale=guidance_scale,
+                width=width,
+                height=height,
             ).images
 
         device = self.pipe.device if hasattr(self.pipe, "device") else torch.device("cpu")
@@ -214,9 +218,12 @@ class InstantIDAdapter:
             generator = torch.Generator(device=device).manual_seed(seed)
 
         result = self.pipe.pipe(
-            prompt=prompt, negative_prompt=negative_prompt,
+            prompt=prompt,
+            negative_prompt=negative_prompt,
             num_inference_steps=num_inference_steps,
-            guidance_scale=guidance_scale, width=width, height=height,
+            guidance_scale=guidance_scale,
+            width=width,
+            height=height,
             generator=generator,
         )
         return result.images
