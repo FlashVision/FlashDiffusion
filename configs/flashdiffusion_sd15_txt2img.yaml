@@ -1,0 +1,12 @@
+# FlashDiffusion | SD 1.5 | Text-to-Image
+# Standard Stable Diffusion v1.5 generation settings
+# Usage: flashdiffusion generate --config configs/flashdiffusion_sd15_txt2img.yaml
+
+model:
+  name: FlashDiffusion
+  model_id: "runwayml/stable-diffusion-v1-5"
+  resolution: [512, 512]
+  scheduler: ddim
+  num_inference_steps: 30
+  guidance_scale: 7.5
+  torch_dtype: float16

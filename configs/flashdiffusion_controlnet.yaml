@@ -1,0 +1,17 @@
+# FlashDiffusion | ControlNet | Canny Edge Conditioning
+# Generate images conditioned on canny edge maps
+# Usage: flashdiffusion generate --config configs/flashdiffusion_controlnet.yaml
+
+model:
+  name: FlashDiffusion
+  model_id: "runwayml/stable-diffusion-v1-5"
+  resolution: [512, 512]
+  scheduler: ddim
+  num_inference_steps: 30
+  guidance_scale: 7.5
+  torch_dtype: float16
+
+controlnet:
+  type: canny
+  model_id: "lllyasviel/sd-controlnet-canny"
+  conditioning_scale: 1.0

@@ -1,0 +1,12 @@
+# FlashDiffusion | SDXL | Text-to-Image
+# Stable Diffusion XL generation — higher quality, larger model
+# Usage: flashdiffusion generate --config configs/flashdiffusion_sdxl_txt2img.yaml
+
+model:
+  name: FlashDiffusion
+  model_id: "stabilityai/stable-diffusion-xl-base-1.0"
+  resolution: [1024, 1024]
+  scheduler: dpm++
+  num_inference_steps: 25
+  guidance_scale: 7.0
+  torch_dtype: float16
